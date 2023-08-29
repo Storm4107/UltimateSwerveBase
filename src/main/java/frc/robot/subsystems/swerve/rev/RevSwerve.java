@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.rev;
 
 import frc.lib.math.GeometryUtils;
+import frc.lib.util.swerveUtil.secondOrder.SecondOrderSwerveModuleStates;
 import frc.robot.constants.RevSwerveConstants;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -73,8 +74,11 @@ public class RevSwerve extends SubsystemBase {
                 translation.getY(),
                 rotation);
         desiredChassisSpeeds = correctForDynamics(desiredChassisSpeeds);
-        SwerveModuleState[] swerveModuleStates = RevSwerveConfig.swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds);
+
+        SecondOrderSwerveModuleStates secondOrderSwerveModuleStates = RevSwerveConfig.secondKinematics.toSwerveModuleState(desiredChassisSpeeds, getYaw());
+        SwerveModuleState[] swerveModuleStates = secondOrderSwerveModuleStates.getSwerveModuleStates();
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, RevSwerveConfig.maxSpeed);
+        
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.getModuleNumber()], isOpenLoop);
         }
