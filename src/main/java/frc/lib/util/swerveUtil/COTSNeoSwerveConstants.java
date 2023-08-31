@@ -143,7 +143,7 @@ public class COTSNeoSwerveConstants {
         double wheelDiameter = Units.inchesToMeters(4.0);
 
         /** (150 / 7) : 1 */
-        double angleGearRatio = ((9424 / 203) / 1);
+        double angleGearRatio = ((9424.0 / 203.0) / 1.0);
 
         double angleKP = 0.3; //this value does need to be tested :skull:
         double angleKI = 0.0;
