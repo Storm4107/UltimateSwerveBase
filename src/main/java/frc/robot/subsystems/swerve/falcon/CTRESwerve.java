@@ -25,6 +25,13 @@ public class CTRESwerve extends SubsystemBase {
     public Pigeon2 gyro;
     private SwerveDrivePoseEstimator swervePose;
     public Pose2d robotPose;
+
+    double previousT;
+    double offT;
+    Timer timer = new Timer();
+
+    private Rotation2d targetHeading;
+
     public CTRESwerve() {
         gyro = new Pigeon2(CTRESwerveConstants.Swerve.pigeonID, "CANivore"); //"rio" (default), or the name of your CANivore
         gyro.configFactoryDefault();
@@ -59,6 +66,41 @@ public class CTRESwerve extends SubsystemBase {
                 twistForPose.dtheta / LOOP_TIME_S);
         return updatedSpeeds;  
     }
+    private ChassisSpeeds correctHeading(ChassisSpeeds desiredSpeed){
+        //Determine time interval
+        double currentT = timer.get();
+        double dt = currentT - previousT;
+        //Get desired rotational speed in radians per second and absolute translational speed in m/s
+        double vr = desiredSpeed.omegaRadiansPerSecond;
+        double v = Math.hypot(desiredSpeed.vxMetersPerSecond, desiredSpeed.vyMetersPerSecond);
+        if (vr > 0.01 || vr < -0.01){
+            offT = currentT;
+            setTargetHeading(getYaw());
+            return desiredSpeed;
+        }
+        if (currentT - offT < 0.5){
+            setTargetHeading(getYaw());
+            return desiredSpeed;
+        }
+        //Determine target and current heading
+        setTargetHeading( getTargetHeading().plus(new Rotation2d(vr * dt)) );
+        Rotation2d currentHeading = getYaw();
+        //Calculate the change in heading that is needed to achieve the target
+        Rotation2d deltaHeading = getTargetHeading().minus(currentHeading);
+        if (Math.abs(deltaHeading.getDegrees()) < 0.05){
+            return desiredSpeed;
+        }
+        double correctedVr = deltaHeading.getRadians() / dt * 0.05;
+        previousT = currentT;
+
+        return new ChassisSpeeds(desiredSpeed.vxMetersPerSecond, desiredSpeed.vyMetersPerSecond, correctedVr);
+    }
+    public Rotation2d getTargetHeading(){ 
+        return targetHeading; 
+    }
+    public void setTargetHeading(Rotation2d targetHeading) { 
+        this.targetHeading = targetHeading; 
+    }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {        
         ChassisSpeeds desiredChassisSpeeds =
@@ -72,7 +114,7 @@ public class CTRESwerve extends SubsystemBase {
                     translation.getY(),
                     rotation);
         desiredChassisSpeeds = correctForDynamics(desiredChassisSpeeds);
-        
+        desiredChassisSpeeds = correctHeading(desiredChassisSpeeds);
         //old 1st order kinematics
         // SwerveModuleState[] swerveModuleStates = CTRESwerveConfig.swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds);
 
