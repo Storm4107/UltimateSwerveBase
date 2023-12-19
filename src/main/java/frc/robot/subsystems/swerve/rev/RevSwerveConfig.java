@@ -92,13 +92,13 @@ public class RevSwerveConfig
 
     /* Drive Motor Characterization Values 
      * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-    public static final double driveKS = (0.32 / 12); 
-    public static final double driveKV = (1.51 / 12);
-    public static final double driveKA = (0.27 / 12);
+    public static final double driveKS = (0.32); 
+    public static final double driveKV = (1.51);
+    public static final double driveKA = (0.27);
 
     /* Swerve Profiling Values */
     /** Meters per Second */
-    public static final double maxSpeed = 4.2;
+    public static final double maxSpeed = 4.0;
     /** Radians per Second */
     public static final double maxAngularVelocity = 10.0; 
    
