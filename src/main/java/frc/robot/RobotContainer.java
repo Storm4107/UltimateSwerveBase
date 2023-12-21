@@ -25,8 +25,12 @@ public class RobotContainer {
     private final int strafeAxis = 0;
     private final int rotationAxis = 2;
 
+    private final int speedDial = 5;
+
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, 7);
+
+    private final JoystickButton dampen = new JoystickButton(driver, 18);
 
     /* Subsystems */
     private final RevSwerve s_Swerve = new RevSwerve();
@@ -39,8 +43,10 @@ public class RobotContainer {
                 s_Swerve, 
                 () -> -driver.getRawAxis(translationAxis), 
                 () -> -driver.getRawAxis(strafeAxis), 
-                () -> -driver.getRawAxis(rotationAxis), 
-                () -> false
+                () -> driver.getRawAxis(rotationAxis), 
+                () -> false,
+                () -> dampen.getAsBoolean(),
+                () -> -driver.getRawAxis(speedDial) 
             )
         );
 

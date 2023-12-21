@@ -100,7 +100,7 @@ public class RevSwerveConfig
     /** Meters per Second */
     public static final double maxSpeed = 4.0;
     /** Radians per Second */
-    public static final double maxAngularVelocity = 10.0; 
+    public static final double maxAngularVelocity = 5.0; //max 10 or.....
    
 
  
