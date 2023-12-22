@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.swerve.rev.RevSwerve;
 
@@ -31,6 +31,11 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, 7);
 
     private final JoystickButton dampen = new JoystickButton(driver, 18);
+
+    private final POVButton up = new POVButton(driver, 90);
+    private final POVButton down = new POVButton(driver, 270);
+    private final POVButton right = new POVButton(driver, 180);
+    private final POVButton left = new POVButton(driver, 0);
 
     /* Subsystems */
     private final RevSwerve s_Swerve = new RevSwerve();
@@ -63,6 +68,30 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+
+        up.onTrue(
+            new InstantCommand(() -> States.driveState = States.DriveStates.d90)).onFalse(
+            new InstantCommand(() -> States.driveState = States.DriveStates.standard)
+            );
+
+        left.onTrue(
+            new InstantCommand(() -> States.driveState = States.DriveStates.d180)).onFalse(
+            new InstantCommand(() -> States.driveState = States.DriveStates.standard)
+            );
+
+        right.onTrue(
+            new InstantCommand(() -> States.driveState = States.DriveStates.d0)).onFalse(
+            new InstantCommand(() -> States.driveState = States.DriveStates.standard)
+            );
+
+        down.onTrue(
+            new InstantCommand(() -> States.driveState = States.DriveStates.d270)).onFalse(
+            new InstantCommand(() -> States.driveState = States.DriveStates.standard)
+            );
+
+        
+
+       
     }
 
     /**
