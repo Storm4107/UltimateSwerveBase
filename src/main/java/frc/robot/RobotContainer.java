@@ -69,21 +69,20 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
+
+        //heading lock bindings
         up.onTrue(
             new InstantCommand(() -> States.driveState = States.DriveStates.d90)).onFalse(
             new InstantCommand(() -> States.driveState = States.DriveStates.standard)
             );
-
         left.onTrue(
             new InstantCommand(() -> States.driveState = States.DriveStates.d180)).onFalse(
             new InstantCommand(() -> States.driveState = States.DriveStates.standard)
             );
-
         right.onTrue(
             new InstantCommand(() -> States.driveState = States.DriveStates.d0)).onFalse(
             new InstantCommand(() -> States.driveState = States.DriveStates.standard)
             );
-
         down.onTrue(
             new InstantCommand(() -> States.driveState = States.DriveStates.d270)).onFalse(
             new InstantCommand(() -> States.driveState = States.DriveStates.standard)
